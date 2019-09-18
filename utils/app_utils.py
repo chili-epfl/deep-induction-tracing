@@ -8,6 +8,9 @@ def create_vocabulary():
     """
     vocab = ["correct",
              "wrong",
+             "type",
+             "color",
+             "orientation",
              'C_E_F_T',
              'C_E_F_C',
              'C_E_F_O',
