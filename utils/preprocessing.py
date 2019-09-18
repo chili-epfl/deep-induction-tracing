@@ -1,6 +1,7 @@
 import pandas as pd
 from keras.utils import to_categorical
 from tqdm import tqdm
+import numpy as np
 
 
 def answer_to_one_hot(answer, vocabulary):
@@ -25,7 +26,7 @@ def answer_to_one_hot(answer, vocabulary):
     return X
 
 
-def create_X_Y(dataframe, vocabulary):
+def create_X_Y(dataframe, vocabulary, label_vocabulary):
     """
     Create X input matrix for the lstm network and Y label vector.
     Parameters
@@ -46,11 +47,12 @@ def create_X_Y(dataframe, vocabulary):
     users = list(dict.fromkeys(dataframe.loc[:, "user"]))
     for u in tqdm(users, desc='creating input matrix'):
         crt_usr_df = dataframe[dataframe.user == u]
-        x = []
+        x = np.zeros(shape=(63, len(vocabulary)))
         row = None
         for i in range(len(crt_usr_df)):
             row = crt_usr_df.iloc[i, :]
-            x.append(answer_to_one_hot(row, vocabulary))
+            x[i] = (answer_to_one_hot(row, vocabulary))
         X.append(x)
-        Y.append(row.loc["ageGroup"])
+        Y.append(label_vocabulary.index(row.loc["ageGroup"]))
+    X = np.reshape(X, (len(X), 63, len(vocabulary)))
     return X, to_categorical(Y)
