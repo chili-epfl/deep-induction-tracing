@@ -3,7 +3,7 @@ import pandas as pd
 
 def answer_to_one_hot(answer, vocabulary):
     """
-    Create a one-hot vector. indexes 0 and 1 corresponds to the result of the question, next indexes corresponds to the
+    Create a one-hot vector. indexes 0 and 1 correspond to the result of the question, next indexes correspond to the
     type of the question.
 
     Parameters
