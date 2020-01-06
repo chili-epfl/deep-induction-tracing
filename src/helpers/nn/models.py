@@ -13,6 +13,29 @@ from src.helpers.metrics.scores import f1_m
 
 
 def lstm(X, dropout_rate=0.15, n_labels=5, hidden_units=100, gpu=False, stacked=False, amsgrad_on=False):
+    """
+    Train a LSTM neural network.
+    Parameters
+    ----------
+    X : array-like
+        Feature matrix.
+    dropout_rate : int
+        cf Dropout Keras documentation.
+    n_labels : int
+        Number of categorical values in the label vector.
+    hidden_units : int
+        Number of LSTM hidden units.
+    gpu : bool
+    stacked : bool
+        Stacked LSTM model.
+    amsgrad_on : bool
+        If True, use the ADAM fix from https://arxiv.org/abs/1904.03590, False use the original ADAM implementation
+    Returns
+    -------
+    Keras.Model
+        Trained model.
+
+    """
     amsgrad = Adam(amsgrad=amsgrad_on)
     model = Sequential()
     if gpu:

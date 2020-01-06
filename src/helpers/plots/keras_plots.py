@@ -3,10 +3,25 @@ import matplotlib.pyplot as plt
 
 
 def save_graph(model, name):
+    """
+    Wrapper for the keras.utils plot_model function.
+    Parameters
+    ----------
+    model : Keras.Model
+    name : str
+        Path to be saved (filename).
+    """
     return plot_model(model, to_file=name, show_shapes=True, show_layer_names=False)
 
 
 def plot_loss(history):
+    """
+    Plot training and validation loss
+    Parameters
+    ----------
+    history : Keras.History
+        Fitted model history
+    """
     plt.plot(history.history['loss'])
     plt.plot(history.history['val_loss'])
     plt.title('model loss')

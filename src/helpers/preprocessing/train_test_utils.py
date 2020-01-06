@@ -42,6 +42,24 @@ age = ['8-10', '11-13']
 
 
 def prepare_sequences(data, type_=None, feature=None):
+    """
+    Prepare inputs for training.
+
+    Parameters
+    ----------
+    data : Pandas.DataFrame
+    type_ : str
+                Default = None. Question type (CORE, INTRO,...)
+    feature : str
+        Default = None. Question topic (cards, animals, geometry).
+
+    Returns
+    -------
+    X : array-like
+        Training points (features)
+    y : array-like
+        Training points (labels)
+    """
     if type_ is not None:
         data = data[data.type == type_]
     if feature is not None:
@@ -64,7 +82,6 @@ def prepare_sequences(data, type_=None, feature=None):
     X = pad_sequences(X, value=-1, maxlen=63)
 
     return X, y
-
 
 def prepare_and_test(data_test, model, type_=None, feature=None, reshape_cnn=False, reshape_conv=False):
     if type_ is not None:
