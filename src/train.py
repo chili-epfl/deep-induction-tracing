@@ -9,12 +9,17 @@ VALIDATION_PATH = '../generated/validation.csv'
 TYPE = 'CORE'
 FEATURE = 'geometry'
 GPU = False
+BATCH_SIZE = 1000
+EPOCHS = 500
 
 
 def preprocessing():
+    "Wrapper for the preprocessing routine"
+
+    # Load datasets
     data_train = pd.read_csv(TRAIN_PATH)
     data_validation = pd.read_csv(VALIDATION_PATH)
-
+    # Train/Validation split
     X_train, y_train = prepare_sequences(data_train, type_=TYPE, feature=FEATURE)
 
     X_validation, y_validation = prepare_sequences(data_validation, type_=TYPE, feature=FEATURE)
@@ -23,20 +28,21 @@ def preprocessing():
 
 
 def train(name, X_train, y_train, X_validation, y_validation):
+    "Wrapper for the training routine"
     if name == 'vanilla_lstm':
         model = lstm(X_train, dropout_rate=0.3, hidden_units=100, gpu=GPU)
-        history = model.fit(X_train, y_train, epochs=300, batch_size=1000, validation_data=(X_validation, y_validation),
+        history = model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, validation_data=(X_validation, y_validation),
                   shuffle=True)
         return model, history
 
     elif name == 'stacked_lstm':
         model = lstm(X_train, dropout_rate=0.15, hidden_units=100, gpu=GPU, stacked=True)
-        history = model.fit(X_train, y_train, epochs=300, batch_size=1000, validation_data=(X_validation, y_validation),
+        history = model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, validation_data=(X_validation, y_validation),
                   shuffle=True)
         return model, history
     elif name == 'gru':
         model = gru(X_train, dropout_rate=0.3, hidden_units=100, gpu=GPU)
-        history = model.fit(X_train, y_train, epochs=300, batch_size=1000, validation_data=(X_validation, y_validation),
+        history = model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, validation_data=(X_validation, y_validation),
                   shuffle=True)
         return model, history
     elif name == 'cnnlstm':
@@ -46,17 +52,17 @@ def train(name, X_train, y_train, X_validation, y_validation):
         X_validation = X_validation.reshape((X_validation.shape[0], n_steps, n_length, n_features))
 
         model = cnn_lstm(X_train, dropout_rate=0.3, gpu=GPU)
-        history = model.fit(X_train, y_train, epochs=300, batch_size=1000, validation_data=(X_validation, y_validation),
+        history = model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, validation_data=(X_validation, y_validation),
                   shuffle=True)
         return model, history
     elif name == 'convlstm':
         n_steps, n_length = 7, 9
         n_features = 7
-        X_train = X_train.reshape((X_train.shape[0], n_steps, n_length, n_features))
-        X_validation = X_validation.reshape((X_validation.shape[0], n_steps, n_length, n_features))
+        X_train = X_train.reshape((X_train.shape[0], n_steps, 1, n_length, n_features))
+        X_validation = X_validation.reshape((X_validation.shape[0], n_steps, 1, n_length, n_features))
 
         model = conv_lstm(X_train, dropout_rate=0.3)
-        history = model.fit(X_train, y_train, epochs=300, batch_size=1000, validation_data=(X_validation, y_validation),
+        history = model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, validation_data=(X_validation, y_validation),
                   shuffle=True)
         return model, history
 
