@@ -66,7 +66,7 @@ def prepare_sequences(data, type_=None, feature=None):
     return X, y
 
 
-def prepare_and_test(data_test, model, type_=False, feature=False, reshape_cnn=False, reshape_conv=False):
+def prepare_and_test(data_test, model, type_=None, feature=None, reshape_cnn=False, reshape_conv=False):
     if type_ is not None:
         data_test = data_test[data_test.type == type_]
     if feature is not None:
