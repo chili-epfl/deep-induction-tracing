@@ -1,0 +1,44 @@
+import numpy as np
+import pandas as pd
+
+
+
+def seq_to_int(qts, vocab, labels, types, feat, topics, n_steps, age):
+    integ = list()
+    for i, x in enumerate(qts):
+        if i != n_steps:
+            features = list()
+            features.append(vocab.index(qts[i, 4]))
+            features.append(qts[i, 2])
+            features.append(types.index(qts[i, 9]))
+            features.append(feat.index(qts[i, 10]))
+            features.append(topics.index(qts[i, 6]))
+            features.append(age.index(qts[i, 7]))
+            features.append(labels.index(qts[i, 5]))
+        else:
+            features = list()
+            features.append(vocab.index(qts[i, 4]))
+            features.append(qts[i, 2])
+            features.append(types.index(qts[i, 9]))
+            features.append(feat.index(qts[i, 10]))
+            features.append(topics.index(qts[i, 6]))
+            features.append(age.index(qts[i, 7]))
+            features.append(-1)
+        integ.append(features)
+    return integ
+
+
+def split_sequence(data, n_steps, vocab, labels, types, feat, topics, age):
+    X, Y = list(), list()
+    users = list(dict.fromkeys(data.loc[:, "user"]))
+    for u in users:
+        sequence = data[data.user == u]
+        for i in range(len(sequence)):
+            end_idx = i + n_steps
+            if end_idx > len(sequence) - 1:
+                break
+            x = seq_to_int(sequence.values[i:end_idx + 1, :], vocab, labels, types, feat, topics, n_steps, age)
+            y = labels.index(str(sequence.values[end_idx, 5]))
+            X.append(x)
+            Y.append(y)
+    return np.array(X), np.array(Y)
